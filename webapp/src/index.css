@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system - Dark IDE Theme
+   Inspired by GitHub Dark / VS Code Dark+
+   All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* GitHub Dark inspired colors */
+    --background: 215 28% 7%;          /* #0d1117 */
+    --foreground: 213 27% 91%;         /* #e6edf3 */
+
+    --card: 216 28% 9%;                /* #161b22 */
+    --card-foreground: 213 27% 91%;    /* #e6edf3 */
+
+    --popover: 216 28% 9%;             /* #161b22 */
+    --popover-foreground: 213 27% 91%; /* #e6edf3 */
+
+    --primary: 187 96% 52%;            /* #22d3ee - cyan */
+    --primary-foreground: 215 28% 7%;  /* dark background */
+
+    --secondary: 216 18% 14%;          /* slightly lighter */
+    --secondary-foreground: 213 27% 91%;
+
+    --muted: 216 18% 14%;
+    --muted-foreground: 215 13% 50%;   /* #7d8590 */
+
+    --accent: 160 84% 39%;             /* #10b981 - emerald */
+    --accent-foreground: 213 27% 91%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 18% 22%;             /* #30363d */
+    --input: 215 18% 22%;              /* #30363d */
+    --ring: 187 96% 52%;               /* cyan */
+
+    --radius: 0.5rem;
+
+    /* Gradient colors for shimmer effect */
+    --shimmer-start: 187 96% 52%;
+    --shimmer-mid: 160 84% 39%;
+    --shimmer-end: 187 96% 42%;
+
+    --sidebar-background: 216 28% 9%;
+    --sidebar-foreground: 213 27% 91%;
+    --sidebar-primary: 187 96% 52%;
+    --sidebar-primary-foreground: 215 28% 7%;
+    --sidebar-accent: 216 18% 14%;
+    --sidebar-accent-foreground: 213 27% 91%;
+    --sidebar-border: 215 18% 22%;
+    --sidebar-ring: 187 96% 52%;
+
+    /* Code-specific colors */
+    --code-background: 215 28% 5%;
+    --code-foreground: 213 27% 84%;
+    --code-comment: 215 13% 45%;
+    --code-keyword: 187 96% 52%;
+    --code-string: 160 84% 50%;
+    --code-number: 30 100% 60%;
+  }
+
+  .dark {
+    --background: 215 28% 7%;
+    --foreground: 213 27% 91%;
+
+    --card: 216 28% 9%;
+    --card-foreground: 213 27% 91%;
+
+    --popover: 216 28% 9%;
+    --popover-foreground: 213 27% 91%;
+
+    --primary: 187 96% 52%;
+    --primary-foreground: 215 28% 7%;
+
+    --secondary: 216 18% 14%;
+    --secondary-foreground: 213 27% 91%;
+
+    --muted: 216 18% 14%;
+    --muted-foreground: 215 13% 50%;
+
+    --accent: 160 84% 39%;
+    --accent-foreground: 213 27% 91%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 18% 22%;
+    --input: 215 18% 22%;
+    --ring: 187 96% 52%;
+    --sidebar-background: 216 28% 9%;
+    --sidebar-foreground: 213 27% 91%;
+    --sidebar-primary: 187 96% 52%;
+    --sidebar-primary-foreground: 215 28% 7%;
+    --sidebar-accent: 216 18% 14%;
+    --sidebar-accent-foreground: 213 27% 91%;
+    --sidebar-border: 215 18% 22%;
+    --sidebar-ring: 187 96% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar for IDE feel */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+}
+
+/* Code editor styling */
+.code-editor {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+/* Console output styling */
+.console-output {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Glow effects for IDE ambiance */
+.glow-primary {
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.15);
+}
+
+.glow-accent {
+  box-shadow: 0 0 20px hsl(var(--accent) / 0.15);
+}
+
+/* Fade in up animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+/* Float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}

@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Better Auth tables
+model user {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+
+  sessions session[]
+  accounts account[]
+}
+
+model session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+}
+
+model verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+}
+
+// Application-specific models (renamed from Session to MLSession to avoid conflict)
+model MLSession {
+  id        String   @id @default(cuid())
+  name      String   @default("Untitled Session")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  runs      Run[]
+
+  @@map("ml_session")
+}
+
+model Run {
+  id              String    @id @default(cuid())
+  sessionId       String
+  session         MLSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  name            String
+  code            String
+  accuracy        Float
+  precision       Float?
+  recall          Float?
+  f1Score         Float?
+  modelType       String
+  datasetRows     Int?
+  datasetColumns  Int?
+  datasetFeatures String?
+  confusionMatrix String?
+  stdout          String?
+  error           String?
+  isImproved      Boolean   @default(false)
+  explanation     String?
+  createdAt       DateTime  @default(now())
+
+  @@index([sessionId])
+}
