@@ -65,6 +65,9 @@ app.use(
 // Logging
 app.use("*", logger());
 
+// Root endpoint for Render health checks
+app.get("/", (c) => c.json({ status: "ok", service: "loopyter-backend" }));
+
 // Health check endpoint
 app.get("/health", (c) => c.json({ status: "ok" }));
 
@@ -80,14 +83,14 @@ app.route("/api/runs", runsRouter);
 app.route("/api/ai", aiRouter);
 
 const port = Number(process.env.PORT) || Number(env.PORT) || 3000;
-const hostname = process.env.HOSTNAME || "0.0.0.0"; // Bind to all interfaces for production
 
 // Start server using Bun.serve (works on Render)
+// Render sets PORT automatically, and Bun defaults to 0.0.0.0
 const server = Bun.serve({
   port,
-  hostname,
   fetch: app.fetch,
 });
 
-console.log(`Started server: http://${hostname}:${port}`);
-console.log(`Server listening on port ${server.port}`);
+console.log(`✅ Server started successfully`);
+console.log(`📡 Listening on port ${server.port}`);
+console.log(`🌐 Server ready at http://0.0.0.0:${server.port}`);
