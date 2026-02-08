@@ -79,11 +79,15 @@ app.route("/api/sessions", sessionsRouter);
 app.route("/api/runs", runsRouter);
 app.route("/api/ai", aiRouter);
 
-const port = Number(env.PORT) || 3000;
+const port = Number(process.env.PORT) || Number(env.PORT) || 3000;
 const hostname = process.env.HOSTNAME || "0.0.0.0"; // Bind to all interfaces for production
 
-export default {
+// Start server using Bun.serve (works on Render)
+const server = Bun.serve({
   port,
   hostname,
   fetch: app.fetch,
-};
+});
+
+console.log(`Started server: http://${hostname}:${port}`);
+console.log(`Server listening on port ${server.port}`);
