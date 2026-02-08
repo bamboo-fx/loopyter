@@ -25,9 +25,10 @@ if [[ -f "prisma/schema.prisma" ]]; then
   bunx prisma db push --accept-data-loss
 
   # Enable DB viewer (idempotent, safe to call multiple times)
+  # Only in Vibecode environment - fails gracefully if not available
   if [[ -n "${VIBECODE_PROJECT_ID:-}" ]]; then
     echo "Enabling database viewer..."
-    curl -s -X POST "https://api.vibecodeapp.com/api/projects/${VIBECODE_PROJECT_ID}/cloud/db/enable" || true
+    curl -s -X POST "https://api.vibecodeapp.com/api/projects/${VIBECODE_PROJECT_ID}/cloud/db/enable" || echo "Note: Database viewer API call failed (this is OK if not running on Vibecode platform)"
   fi
 fi
 

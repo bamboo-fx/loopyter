@@ -6,7 +6,27 @@ import { prisma } from "./prisma";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Default trusted origins for development and Vibecode platform
+const defaultTrustedOrigins = [
+  "http://localhost:*",
+  "http://127.0.0.1:*",
+  "https://*.dev.vibecode.run",
+  "https://*.vibecode.run",
+  "https://*.vibecodeapp.com",
+];
+
+// Parse custom trusted origins from environment variable
+// Format: "https://example.com,https://*.example.com" (comma-separated)
+let customTrustedOrigins: string[] = [];
+if (process.env.TRUSTED_ORIGINS) {
+  customTrustedOrigins = process.env.TRUSTED_ORIGINS.split(",").map((origin) => origin.trim());
+}
+
+const trustedOrigins = [...defaultTrustedOrigins, ...customTrustedOrigins];
+
 export const auth = betterAuth({
+  secret: process.env.BETTER_AUTH_SECRET,
+  baseURL: process.env.BETTER_AUTH_BASE_URL || process.env.BACKEND_URL,
   database: prismaAdapter(prisma, {
     provider: "sqlite",
   }),
@@ -38,11 +58,5 @@ export const auth = betterAuth({
       },
     }),
   ],
-  trustedOrigins: [
-    "http://localhost:*",
-    "http://127.0.0.1:*",
-    "https://*.dev.vibecode.run",
-    "https://*.vibecode.run",
-    "https://*.vibecodeapp.com",
-  ],
+  trustedOrigins,
 });
